@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: httpserver
-        image: httpservertini
+        image: wuyongmax/httpserver
         imagePullPolicy: IfNotPresent
         #QOS
         resources: 
