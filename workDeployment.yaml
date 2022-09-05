@@ -14,15 +14,28 @@ spec:
       labels:
         app: httpserver
     spec:
+      initContainers:
+      - name: testinit
+        image: busybox
+        command: ["sh","-c","echo initconainer"]
       containers:
       - name: httpserver
         image: wuyongmax/httpserver
+        ports:
+        - containerPort: 8080
         livenessProbe:
           httpGet:
             path: /healthz
             port: 8080
           initialDelaySeconds: 10
           periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+
         resources:
           requests:
             memory: "128Mi"
