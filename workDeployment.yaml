@@ -17,6 +17,20 @@ spec:
       containers:
       - name: httpserver
         image: wuyongmax/httpserver
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "300m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
         lifecycle:
           postStart:
             exec:
@@ -24,17 +38,11 @@ spec:
           preStop:
             exec:
               command: ["/bin/sh","-c","sleep 30"]
-        #QOS
-        resources: 
-          requests:
-            memory: "128Mi"
-            cpu: "300m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 8080
-          initialDelaySeconds: 10
-          periodSeconds: 10
+        volumeMounts:
+        - name: regred
+          mountPath: "/etc/foo"
+      volumes:
+      - name: regred
+        secret:
+          secretName: regred
+          optional: false
