@@ -5,5 +5,5 @@ data:
 kind: ConfigMap
 metadata:
   name: myenv
-  namespace: default
+  namespace: cloudnative 
 
