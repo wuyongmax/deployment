@@ -11,32 +11,18 @@ spec:
       app: httpserver
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
       labels:
         app: httpserver
     spec:
       terminationGracePeriodSeconds: 60
-      initContainers:
-      - name: testinit
-        image: busybox
-        command: ["sh","-c","echo initconainer"]
       containers:
       - name: httpserver
-        image: wuyongmax/httpserver
+        image: wuyongmax/httpservermetrics
         ports:
         - containerPort: 8080
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 8080
-          initialDelaySeconds: 10
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /healthz
-            port: 8080
-          initialDelaySeconds: 10
-          periodSeconds: 10
-
         resources:
           requests:
             memory: "128Mi"
@@ -52,11 +38,4 @@ spec:
           preStop:
             exec:
               command: ["/bin/sh","-c","sleep 30"]
-        volumeMounts:
-        - name: regred
-          mountPath: "/etc/foo"
-      volumes:
-      - name: regred
-        secret:
-          secretName: regred
-          optional: false
+
